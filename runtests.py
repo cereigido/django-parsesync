@@ -18,4 +18,4 @@ except AttributeError:
     pass
 
 if __name__ == "__main__":
-    run_exit(argv=sys.argv)
+    run_exit(argv=argv)
