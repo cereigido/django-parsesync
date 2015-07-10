@@ -1,4 +1,4 @@
-parsesync
+django-parse-sync
 ============
 
 Installation

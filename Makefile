@@ -7,7 +7,7 @@ clean:
 	@rm -rf dist build
 
 test: clean
-	@python runtests.py
+	@python runtests.py --verbosity 2 --with-coverage --cover-html --cover-package=parsesync --with-yanc
 
 sdist:
 	@python setup.py sdist

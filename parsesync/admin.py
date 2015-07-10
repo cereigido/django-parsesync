@@ -1,7 +1,8 @@
 # -*- coding=utf-8 -*-
 
 from django.contrib import admin
+from parsesync.models import ParseModel
 
 
 class ParseAdmin(admin.ModelAdmin):
-    readonly_fields = ('object_id', 'created_at', 'updated_at', )
+    readonly_fields = ParseModel.SYSTEM_FIELDS
