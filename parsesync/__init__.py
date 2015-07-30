@@ -2,6 +2,8 @@
 
 from re import split
 
+__version__ = '1.0.0'
+
 
 class ParseSyncException(Exception):
     pass
