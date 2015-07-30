@@ -7,11 +7,6 @@ class ParseSyncException(Exception):
     pass
 
 
-def exception_handler(result):
-    if 'error' in result:
-        raise ParseSyncException('%(error)s (code %(code)s)' % result)
-
-
 def to_camel_case(var_name):
     parts = var_name.split('_')
     return parts[0] + "".join(x.title() for x in parts[1:])
