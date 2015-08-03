@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from os.path import dirname, abspath, join
-from setuptools import setup
+from setuptools import find_packages, setup
 
 URL = 'https://github.com/cereigido/django-parsesync/'
 VERSION = __import__('parsesync').__version__
@@ -12,7 +12,7 @@ with open(abspath(join(dirname(__file__), 'README.md'))) as fileobj:
 
 setup(
     name='django-parsesync',
-    packages=['parsesync'],
+    packages=find_packages(),
     version=VERSION,
     author='Paulo Cereigido',
     author_email='paulocereigido@gmail.com',
