@@ -8,7 +8,7 @@ Installation
 ------------
 
 ```sh
-pip install git+https://github.com/cereigido/parsesync.git
+pip install django-parsesync
 ```
 
 Defining your settings
@@ -77,12 +77,6 @@ Bringing data from Parse.com to your local database
         --model MODEL         Sync only provided model name
         --all                 Query content from the beggining of time
 ```
-
-What's (maybe) next?
---------------------
-
-- Check older Django versions compatibility for parsetodjango command.
-- Allow user to extend ParseAdmin attributes in a smarter way.
 
 License
 -------
