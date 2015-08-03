@@ -8,7 +8,7 @@ Installation
 ------------
 
 ```sh
-pip install git+https://github.com/cereigido/parsesync.git
+pip install django-parsesync
 ```
 
 Defining your settings
