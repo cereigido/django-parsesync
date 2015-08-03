@@ -2,7 +2,7 @@
 
 from re import split
 
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 
 
 class ParseSyncException(Exception):
