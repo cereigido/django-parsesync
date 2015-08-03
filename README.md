@@ -78,12 +78,6 @@ Bringing data from Parse.com to your local database
         --all                 Query content from the beggining of time
 ```
 
-What's (maybe) next?
---------------------
-
-- Check older Django versions compatibility for parsetodjango command.
-- Allow user to extend ParseAdmin attributes in a smarter way.
-
 License
 -------
 
