@@ -3,7 +3,9 @@
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from hashlib import md5
 from json import dumps, loads
+from os.path import splitext
 from parsesync import ParseSyncException, exception_handler, to_camel_case, to_snake_case
 from parsesync.client import ParseClient
 
@@ -70,17 +72,21 @@ class ParseModel(models.Model):
 
             # TODO: when a field is null, it should be removed from parse
             # ignoring "system" fields
-            if field.name not in self.SYSTEM_FIELDS and getattr(self, field.name) is not None:
+            if field.name not in self.SYSTEM_FIELDS and hasattr(self, field.name) and getattr(self, field.name) is not None:
                 if hasattr(self, prepare_method):
                     self.payload[parse_field_name] = getattr(self, prepare_method)(field)
                 else:
                     self.payload[parse_field_name] = self._prepare_field(field)
 
     def _prepare_date_field(self, field):
-        return {
-            '__type': 'Date',
-            'iso': '%sT00:00:00.000' % getattr(self, field.name).isoformat()
-        }
+        field_iso_value = getattr(self, field.name).isoformat()
+        if 'Z' in field_iso_value:
+            return self._prepare_date_time_field(field)
+        else:
+            return {
+                '__type': 'Date',
+                'iso': '%sT00:00:00.000Z' % field_iso_value
+            }
 
     def _prepare_date_time_field(self, field):
         return {
@@ -92,7 +98,18 @@ class ParseModel(models.Model):
         return getattr(self, field.name)
 
     def _prepare_file_field(self, field):
-        # Not supported yet
+        field_value = getattr(self, field.name)
+
+        if hasattr(field_value, 'file'):
+            content = field_value.file.read()
+            _, ext = splitext(field_value.file.name)
+            new_filename = '%s%s' % (md5(content).hexdigest(), ext)
+            response = self.pc.upload_file(new_filename, content)
+            return {
+                'name': response['name'],
+                '__type': 'File'
+            }
+
         return None
 
     def _prepare_foreign_key(self, field):
@@ -109,8 +126,7 @@ class ParseModel(models.Model):
         }
 
     def _prepare_image_field(self, field):
-        # Not supported yet
-        return None
+        return self._prepare_file_field(field)
 
     class Meta:
         abstract = True

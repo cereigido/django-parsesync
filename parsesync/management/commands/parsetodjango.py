@@ -1,20 +1,30 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.contrib.contenttypes.models import ContentType
 from json import loads
+from optparse import make_option
 from parsesync import to_snake_case
 from parsesync.client import ParseClient
 from parsesync.config import ParseSyncConfig
 from parsesync.models import ParseModel
+from urllib import urlretrieve
 
 
 class Command(BaseCommand):
     help = 'Sync data from parse to Django'
 
+    # Django < 1.7- support
+    option_list = BaseCommand.option_list + (
+        make_option('--model', help='Sync only provided model name'),
+        make_option('--all', action='store_true', default=False, help='Query content from the beggining of time'),
+    )
+
+    # Django 1.8+ support
     def add_arguments(self, parser):
-        parser.add_argument('--model', nargs=1, help='Sync only provided model name')
+        parser.add_argument('--model', help='Sync only provided model name')
         parser.add_argument('--all', action='store_true', default=False, help='Query content from the beggining of time')
 
     def handle(self, *args, **options):
@@ -23,7 +33,7 @@ class Command(BaseCommand):
 
         model_filter = options.get('model')
         if model_filter:
-            model_filter = ''.join(model_filter[0].lower().split(' '))
+            model_filter = ''.join(model_filter.lower().split(' '))
             content_types = ContentType.objects.filter(model=model_filter)
         else:
             content_types = ContentType.objects.all().order_by('model')
@@ -76,7 +86,9 @@ class Command(BaseCommand):
                     conv_value = datetime.strptime(value['iso'], "%Y-%m-%dT%H:%M:%S.000Z")
                     setattr(instance, snake_key, conv_value)
                 elif value['__type'] == 'File':
-                    pass
+                    if 'url' in value:
+                        dl_file = urlretrieve(value['url'])
+                        getattr(instance, snake_key).save(value['name'], File(open(dl_file[0])))
                 elif value['__type'] == 'Pointer':
                     setattr(instance, '%s_id' % value['className'].lower(), value['objectId'])
                 else:

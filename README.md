@@ -1,4 +1,4 @@
-django-parse-sync
+django-parsesync
 ============
 
 > Parse.com is a powerful cloud database with many services included. Its data browser is simple and not suited for everyday editing (yet).
@@ -65,7 +65,7 @@ Bringing data from Parse.com to your local database
 ---------------------------------------------------
 
 - If you already have data on your Parse.com app or some of it was edited right from Parse.com Data Browser, you would want to bring it back to your Django admin by using the manage.py command parsetodjango.
-- By default, the updated date for the last content is recorded and the next time the command is called, only new data is gathered. You can avoid this behaviour by using the --all flag and everything will be started over.
+- By default, the updated date for the last content is recorded and the next time the command is called, only new data is gathered. You can avoid this behavior by using the --all flag and everything will be started over.
 - You may also want to grab data from an especific model by using the flag ---model followed by your model name. If your model is called FooBar, then foobar, Foobar, FOOBAR, foobaR are valid options, this parameter is case insensitive.
 
 ```
@@ -81,8 +81,6 @@ Bringing data from Parse.com to your local database
 What's (maybe) next?
 --------------------
 
-- Add support FileField and ImageField.
-- Allow the execution of each model on parsetodjango as a separate thread.
 - Check older Django versions compatibility for parsetodjango command.
 - Allow user to extend ParseAdmin attributes in a smarter way.
 
