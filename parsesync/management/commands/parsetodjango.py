@@ -31,6 +31,7 @@ class Command(BaseCommand):
         self.pc = ParseClient()
         self.psc = ParseSyncConfig()
 
+        # dependencies must be identified and synced first
         model_filter = options.get('model')
         if model_filter:
             model_filter = ''.join(model_filter.lower().split(' '))
@@ -69,6 +70,7 @@ class Command(BaseCommand):
         for item in results:
             object_id = item.get('objectId')
             updated_at = item.get('updatedAt')
+            files = []
 
             try:
                 instance = model.objects.get(object_id=object_id)
@@ -88,7 +90,7 @@ class Command(BaseCommand):
                 elif value['__type'] == 'File':
                     if 'url' in value:
                         dl_file = urlretrieve(value['url'])
-                        getattr(instance, snake_key).save(value['name'], File(open(dl_file[0])))
+                        files.append([getattr(instance, snake_key), value['name'], File(open(dl_file[0]))])
                 elif value['__type'] == 'Pointer':
                     setattr(instance, '%s_id' % value['className'].lower(), value['objectId'])
                 else:
@@ -100,6 +102,10 @@ class Command(BaseCommand):
                 instance.save()
             except Exception, e:
                 print 'Error [%s] ocurred while saving your content' % e
+
+            # saving and associating files
+            for f in files:
+                f[0].save(f[1], f[2])
 
             self.psc.set_last_updated_item_from_parse(model, updated_at)
             self.psc.save()

@@ -31,7 +31,7 @@ class ParseModel(models.Model):
         exception_handler(result)
 
         self.object_id = result[self.OBJECT_ID_PARSE_FIELD]
-        self.created_at = self.updated_at = result[self.CREATED_AT_PARSE_FIELD]
+        self.created_at = result[self.CREATED_AT_PARSE_FIELD]
 
     def parse_delete(self):
         result = self.pc.delete(self.__class__.__name__, self.object_id)

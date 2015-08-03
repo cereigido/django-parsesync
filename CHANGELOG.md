@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.2] - 2015-08-03
+
+### Fixed
+- Files associated to model instance where forcing it to be saved earlier.
+
 ## [1.1.1] - 2015-08-03
 
 ### Fixed

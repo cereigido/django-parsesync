@@ -60,8 +60,6 @@ class ParseClient():
 
         result = loads(r.text)
         if 'error' in result:
-            import ipdb; ipdb.set_trace()
-
             raise ParseSyncException('Error trying to upload file to Parse.com: %s (%i)' % (result['error'], result['code']))
 
         return result
