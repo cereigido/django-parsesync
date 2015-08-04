@@ -3,6 +3,7 @@
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.utils import timezone
 from hashlib import md5
 from json import dumps, loads
 from os.path import splitext
@@ -22,8 +23,8 @@ class ParseModel(models.Model):
     pc = ParseClient()
 
     object_id = models.CharField(primary_key=True, max_length=10, editable=False)
-    created_at = models.DateTimeField(editable=False)
-    updated_at = models.DateTimeField(editable=False)
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
+    updated_at = models.DateTimeField(default=timezone.now, editable=False)
     save_to_parse = True
 
     def parse_create(self):
