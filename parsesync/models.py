@@ -1,6 +1,8 @@
 # -*- coding=utf-8 -*-
 
+from datetime import date
 from django.db import models
+from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.utils import timezone
@@ -72,27 +74,29 @@ class ParseModel(models.Model):
             parse_field_name = to_camel_case(field.column)
 
             # TODO: when a field is null, it should be removed from parse
-            # ignoring "system" fields
-            if field.name not in self.SYSTEM_FIELDS and hasattr(self, field.name) and getattr(self, field.name) is not None:
+            # ignoring "system" fields and OneToOne relations
+            if field.name not in self.SYSTEM_FIELDS and type(field) != OneToOneField and hasattr(self, field.name) and getattr(self, field.name) is not None:
                 if hasattr(self, prepare_method):
-                    self.payload[parse_field_name] = getattr(self, prepare_method)(field)
+                    value = getattr(self, prepare_method)(field)
                 else:
-                    self.payload[parse_field_name] = self._prepare_field(field)
+                    value = self._prepare_field(field)
+
+                if value is not None:
+                    self.payload[parse_field_name] = value
 
     def _prepare_date_field(self, field):
-        field_iso_value = getattr(self, field.name).isoformat()
-        if 'Z' in field_iso_value:
-            return self._prepare_date_time_field(field)
-        else:
-            return {
-                '__type': 'Date',
-                'iso': '%sT00:00:00.000Z' % field_iso_value
-            }
+        return self._prepare_date_time_field(field)
 
     def _prepare_date_time_field(self, field):
+        value = getattr(self, field.name)
+        if type(value) == date:
+            iso = '%sT00:00:00.000Z' % value.isoformat()
+        else:
+            iso = value.isoformat()
+
         return {
             '__type': 'Date',
-            'iso': getattr(self, field.name).isoformat()
+            'iso': iso
         }
 
     def _prepare_field(self, field):

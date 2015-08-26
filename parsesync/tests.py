@@ -1,4 +1,4 @@
-# from nose import with_setup
+# -*- coding=utf-8 -*-
 
 from parsesync import ParseSyncException, to_camel_case, to_snake_case
 from parsesync.admin import ParseAdmin

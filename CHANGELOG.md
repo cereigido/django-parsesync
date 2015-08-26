@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.1.3] - 2015-08-??
+## [1.1.3] - 2015-08-04
 
 ### Fixed
 - Added default value for ParseModel's created_at and updated_at fields.

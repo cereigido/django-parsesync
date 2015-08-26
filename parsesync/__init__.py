@@ -1,8 +1,19 @@
 # -*- coding=utf-8 -*-
 
 from re import split
+from threading import Thread
 
 __version__ = '1.1.3'
+
+
+class FunctionThread(Thread):
+    def __init__(self, fn, *args, **kwargs):
+        Thread.__init__(self)
+        self.fn = fn
+        self.kwargs = kwargs
+
+    def run(self):
+        self.fn(**self.kwargs)
 
 
 class ParseSyncException(Exception):
